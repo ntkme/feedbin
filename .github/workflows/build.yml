@@ -1,0 +1,33 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ntkme/feedbin:latest
+
+      - name: Build and push
+        run: |-
+          sudo podman build --cap-add CAP_SYS_ADMIN --tag docker.io/ntkme/systemd-feedbin:latest .
+          sudo podman push --authfile ~/.docker/config.json docker.io/ntkme/systemd-feedbin:latest

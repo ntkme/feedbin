@@ -1,0 +1,19 @@
+[Unit]
+Description=Podman container-caddy.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network.target
+After=network-online.target
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+ExecStartPre=/bin/rm -f %t/container-caddy.pid %t/container-caddy.ctr-id
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-caddy.pid --cidfile %t/container-caddy.ctr-id --cgroups=no-conmon --replace -d --name caddy --net host --volume /data/caddy/Caddyfile:/etc/caddy/Caddyfile:rw --volume /data/caddy/data:/data:rw docker.io/library/caddy:2-alpine
+ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-caddy.ctr-id -t 10
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-caddy.ctr-id
+PIDFile=%t/container-caddy.pid
+KillMode=none
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

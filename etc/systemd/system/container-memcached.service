@@ -1,0 +1,19 @@
+[Unit]
+Description=Podman container-memcached.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network.target
+After=network-online.target
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+ExecStartPre=/bin/rm -f %t/container-memcached.pid %t/container-memcached.ctr-id
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-memcached.pid --cidfile %t/container-memcached.ctr-id --cgroups=no-conmon --replace -d --name memcached --net host --env-file /data/memcached/.env docker.io/library/memcached:1-alpine
+ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-memcached.ctr-id -t 10
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-memcached.ctr-id
+PIDFile=%t/container-memcached.pid
+KillMode=none
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

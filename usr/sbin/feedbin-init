@@ -1,0 +1,117 @@
+#!/bin/sh
+set -e
+
+if test "$#" -ne 1 -o -z "$1"; then
+  echo "Usage: $0 hostname"
+  exit 1
+fi
+
+configure () {
+  echo "# $1" && test -e "$1" || tee "$1" && "${2:-.}" "$1" && echo
+}
+
+secure_random () {
+  head -c 512 /dev/urandom | sha256sum | head -c 64
+}
+
+mkdir -p /data/caddy/data \
+         /data/camo \
+         /data/elasticsearch/data \
+         /data/feedbin \
+         /data/memcached \
+         /data/minio/data \
+         /data/postgresql/data \
+         /data/redis/data \
+         /var/run/postgresql
+
+configure /data/camo/.env <<EOF
+CAMO_KEY=$(secure_random)
+EOF
+
+configure /data/elasticsearch/.env : <<EOF
+EOF
+
+configure /data/memcached/.env : <<EOF
+EOF
+
+configure /data/minio/.env <<EOF
+MINIO_HOST=http://127.0.0.1:9000
+MINIO_ACCESS_KEY=$(secure_random)
+MINIO_SECRET_KEY=$(secure_random)
+EOF
+
+configure /data/postgresql/.env : <<EOF
+POSTGRES_USER=root
+POSTGRES_PASSWORD=$(secure_random)
+EOF
+
+configure /data/redis/.env : <<EOF
+EOF
+
+configure /data/feedbin/.env <<EOF
+DATABASE_URL=postgres:///feedbin_production
+ELASTICSEARCH_URL=http://127.0.0.1:9200
+MEMCACHED_HOSTS=127.0.0.1:11211
+REDIS_URL=redis://127.0.0.1:6379
+
+SECRET_KEY_BASE=$(secure_random)
+
+CAMO_KEY=$CAMO_KEY
+
+AWS_S3_ENDPOINT=$MINIO_HOST
+AWS_ACCESS_KEY_ID=$MINIO_ACCESS_KEY
+AWS_SECRET_ACCESS_KEY=$MINIO_SECRET_KEY
+AWS_S3_PATH_STYLE=true
+
+EXTRACT_USER=$(secure_random)
+EXTRACT_SECRET=$(secure_random)
+
+RACK_ENV=production
+RAILS_ENV=production
+
+FEEDBIN_HOST=$1,api.feedbin.com
+EXTRACT_HOST=$1
+CAMO_HOST=https://camo.$1
+ENTRY_IMAGE_HOST=minio.$1
+FAVICON_HOST=minio.$1
+
+FEEDBIN_URL=https://$1
+DEFAULT_URL_OPTIONS_HOST=$1
+PUSH_URL=https://$1
+
+AWS_S3_BUCKET=feedbin
+AWS_S3_BUCKET_FAVICONS=feedbin-favicons
+
+FORCE_SSL=
+EOF
+
+configure /data/caddy/Caddyfile : <<EOF
+$1 {
+  encode zstd gzip
+  reverse_proxy http://127.0.0.1:3000
+  reverse_proxy /parser/* http://127.0.0.1:3001
+
+  @signup {
+    method POST
+    path */users*
+  }
+  #respond @signup 403
+}
+
+api.$1 {
+  encode zstd gzip
+  reverse_proxy http://127.0.0.1:3000 {
+    header_up Host api.feedbin.com
+  }
+}
+
+camo.$1 {
+  encode zstd gzip
+  reverse_proxy http://127.0.0.1:8081
+}
+
+minio.$1 {
+  encode zstd gzip
+  reverse_proxy $MINIO_HOST
+}
+EOF

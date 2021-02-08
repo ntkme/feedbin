@@ -1,0 +1,19 @@
+[Unit]
+Description=Podman container-feedbin-refresher.service
+Documentation=man:podman-generate-systemd(1)
+Wants=container-feedbin-rake.service container-redis.service
+After=container-feedbin-rake.service container-redis.service
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+ExecStartPre=/bin/rm -f %t/container-feedbin-refresher.pid %t/container-feedbin-refresher.ctr-id
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-feedbin-refresher.pid --cidfile %t/container-feedbin-refresher.ctr-id --cgroups=no-conmon --replace -d --name feedbin-refresher --net host --env-file /data/feedbin/.env --workdir /opt/feedbin/refresher docker.io/ntkme/feedbin
+ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-feedbin-refresher.ctr-id -t 10
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-feedbin-refresher.ctr-id
+PIDFile=%t/container-feedbin-refresher.pid
+KillMode=none
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

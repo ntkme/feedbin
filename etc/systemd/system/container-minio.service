@@ -1,0 +1,19 @@
+[Unit]
+Description=Podman container-minio.service
+Documentation=man:podman-generate-systemd(1)
+Wants=container-caddy.service
+After=container-caddy.service
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+ExecStartPre=/bin/rm -f %t/container-minio.pid %t/container-minio.ctr-id
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-minio.pid --cidfile %t/container-minio.ctr-id --cgroups=no-conmon --replace -d --name minio --net host --volume /data/minio/data:/data:rw --env-file /data/minio/.env docker.io/minio/minio server /data
+ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-minio.ctr-id -t 10
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-minio.ctr-id
+PIDFile=%t/container-minio.pid
+KillMode=none
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,19 @@
+[Unit]
+Description=Podman container-elasticsearch.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network.target
+After=network-online.target
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+ExecStartPre=/bin/rm -f %t/container-elasticsearch.pid %t/container-elasticsearch.ctr-id
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-elasticsearch.pid --cidfile %t/container-elasticsearch.ctr-id --cgroups=no-conmon --replace -d --name elasticsearch --net host --volume /data/elasticsearch/data:/usr/share/elasticsearch/data --env-file /data/elasticsearch/.env docker.io/library/elasticsearch:2.4-alpine
+ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-elasticsearch.ctr-id -t 10
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-elasticsearch.ctr-id
+PIDFile=%t/container-elasticsearch.pid
+KillMode=none
+Type=forking
+
+[Install]
+WantedBy=multi-user.target
