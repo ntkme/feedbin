@@ -1,7 +1,7 @@
-FROM docker.io/library/ruby:2.6-stretch
+FROM docker.io/library/ruby:2.7
 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
- && apt-get install -y --no-install-recommends libidn11-dev libopencv-dev nodejs postgresql-client \
+ && apt-get install -y --no-install-recommends libidn11-dev libvips42 nodejs postgresql-client \
  && rm -rf /var/lib/apt/lists/* \
  && gem install bundler \
  && npm install -g yarn \
@@ -11,7 +11,6 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
  && git clone --depth 1 https://github.com/feedbin/image.git /opt/feedbin/image \
  && cd /opt/feedbin/image \
  && bundle install \
- && cp /opt/feedbin/feedbin/config/initializers/s3.rb lib/s3_pool.rb \
  && git clone --depth 1 https://github.com/feedbin/refresher.git /opt/feedbin/refresher \
  && cd /opt/feedbin/refresher \
  && bundle install \
