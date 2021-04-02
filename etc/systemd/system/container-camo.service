@@ -8,7 +8,7 @@ After=container-caddy.service
 Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
 ExecStartPre=/bin/rm -f %t/container-camo.pid %t/container-camo.ctr-id
-ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-camo.pid --cidfile %t/container-camo.ctr-id --cgroups=no-conmon -d --replace --name camo --net host --env-file /data/camo/.env --workdir /opt/atmos/camo docker.io/ntkme/feedbin node server.js
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-camo.pid --cidfile %t/container-camo.ctr-id --cgroups=no-conmon -d --replace --name camo --net host --env-file /data/camo/.env --workdir /opt/atmos/camo ghcr.io/ntkme/feedbin node server.js
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-camo.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-camo.ctr-id
 PIDFile=%t/container-camo.pid

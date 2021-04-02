@@ -8,7 +8,7 @@ After=container-caddy.service container-camo.service container-feedbin-extract.s
 Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
 ExecStartPre=/bin/rm -f %t/container-feedbin-rails.pid %t/container-feedbin-rails.ctr-id
-ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-feedbin-rails.pid --cidfile %t/container-feedbin-rails.ctr-id --cgroups=no-conmon --replace -d --name feedbin-rails --net host --volume /var/run/postgresql:/var/run/postgresql:rw --env-file /data/feedbin/.env --env RAILS_SERVE_STATIC_FILES=true docker.io/ntkme/feedbin /bin/sh -c 'bundle exec rake assets:precompile && exec bundle exec rails server'
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-feedbin-rails.pid --cidfile %t/container-feedbin-rails.ctr-id --cgroups=no-conmon --replace -d --name feedbin-rails --net host --volume /var/run/postgresql:/var/run/postgresql:rw --env-file /data/feedbin/.env --env RAILS_SERVE_STATIC_FILES=true ghcr.io/ntkme/feedbin /bin/sh -c 'bundle exec rake assets:precompile && exec bundle exec rails server'
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-feedbin-rails.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-feedbin-rails.ctr-id
 PIDFile=%t/container-feedbin-rails.pid
