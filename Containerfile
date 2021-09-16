@@ -7,7 +7,7 @@ RUN podman pull docker.io/library/caddy:2-alpine \
  && podman pull docker.io/library/redis:5-alpine \
  && podman pull docker.io/minio/mc \
  && podman pull docker.io/minio/minio \
- && podman pull ghcr.io/ntkme/feedbin \
+ && podman pull localhost:5000/feedbin \
  && rm -rf /usr/share/containers/storage \
  && mv /var/lib/containers/storage /usr/share/containers/storage
 

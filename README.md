@@ -23,7 +23,7 @@ sudo podman run -d \
   --publish 80:80/tcp \
   --publish 443:443/tcp \
   --volume /var/lib/feedbin:/data \
-  ghcr.io/ntkme/systemd-feedbin
+  ghcr.io/ntkme/feedbin
 ```
 
 ###### With `docker`
@@ -38,7 +38,7 @@ docker run -d \
   --volume /var/lib/feedbin:/data \
   --device /dev/fuse \
   --stop-signal SIGRTMIN+3 \
-  ghcr.io/ntkme/systemd-feedbin
+  ghcr.io/ntkme/feedbin
 ```
 
 #### Grant Admin Access

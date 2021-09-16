@@ -11,9 +11,17 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          submodules: true
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
@@ -25,10 +33,11 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
+          context: .
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/feedbin:latest
+          tags: localhost:5000/feedbin:latest
 
       - name: Build and push
         run: |-
-          sudo podman build --cap-add CAP_SYS_ADMIN --tag ghcr.io/${{ github.repository_owner }}/systemd-feedbin:latest .
-          sudo podman push --authfile ~/.docker/config.json ghcr.io/${{ github.repository_owner }}/systemd-feedbin:latest
+          sudo podman build --cap-add CAP_SYS_ADMIN --net host --tag ghcr.io/${{ github.repository_owner }}/feedbin:latest .
+          sudo podman push --authfile ~/.docker/config.json ghcr.io/${{ github.repository_owner }}/feedbin:latest
