@@ -1,4 +1,4 @@
-FROM docker.io/library/ruby:2.7
+FROM docker.io/library/ruby:3.0.2
 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
  && apt-get install -y --no-install-recommends libidn11-dev libvips42 nodejs postgresql-client \
