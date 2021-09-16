@@ -34,10 +34,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: true
-          tags: localhost:5000/feedbin:latest
+          tags: feedbin:latest
 
       - name: Build and push
         run: |-
-          sudo podman build --cap-add CAP_SYS_ADMIN --net host --tag ghcr.io/${{ github.repository_owner }}/feedbin:latest .
+          sudo podman build --cap-add CAP_SYS_ADMIN --volume /var/run/docker.sock:/var/run/docker.sock --tag ghcr.io/${{ github.repository_owner }}/feedbin:latest .
           sudo podman push --authfile ~/.docker/config.json ghcr.io/${{ github.repository_owner }}/feedbin:latest

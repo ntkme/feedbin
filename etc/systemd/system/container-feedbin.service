@@ -8,7 +8,7 @@ After=container-mc.service container-feedbin-rake.service container-redis.servic
 Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
 ExecStartPre=/bin/rm -f %t/container-feedbin.pid %t/container-feedbin.ctr-id
-ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-feedbin.pid --cidfile %t/container-feedbin.ctr-id --cgroups=no-conmon --replace -d --name feedbin --net host --volume /var/run/postgresql:/var/run/postgresql:rw --env-file /data/feedbin/.env localhost:5000/feedbin
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-feedbin.pid --cidfile %t/container-feedbin.ctr-id --cgroups=no-conmon --replace -d --name feedbin --net host --volume /var/run/postgresql:/var/run/postgresql:rw --env-file /data/feedbin/.env feedbin
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-feedbin.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-feedbin.ctr-id
 PIDFile=%t/container-feedbin.pid
