@@ -22,6 +22,7 @@ sudo podman run -d \
   --hostname feedbin.domain.name \
   --publish 80:80/tcp \
   --publish 443:443/tcp \
+  --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
   --volume /var/lib/feedbin:/data \
   ghcr.io/ntkme/feedbin
 ```
@@ -35,6 +36,7 @@ docker run -d \
   --hostname feedbin.domain.name \
   --publish 80:80/tcp \
   --publish 443:443/tcp \
+  --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
   --volume /var/lib/feedbin:/data \
   --device /dev/fuse \
   --stop-signal SIGRTMIN+3 \
