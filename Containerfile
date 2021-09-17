@@ -1,4 +1,4 @@
-FROM ghcr.io/ntkme/systemd-podman:latest
+FROM ghcr.io/ntkme/systemd-podman:edge
 
 RUN podman pull docker.io/library/caddy:2-alpine \
  && podman pull docker.io/library/elasticsearch:2.4-alpine \

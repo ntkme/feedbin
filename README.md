@@ -1,4 +1,4 @@
-# container-feedbin
+# feedbin
 
 Whole Feedbin stack in a container.
 
@@ -24,7 +24,7 @@ sudo podman run -d \
   --publish 443:443/tcp \
   --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
   --volume /var/lib/feedbin:/data \
-  ghcr.io/ntkme/feedbin
+  ghcr.io/ntkme/feedbin:edge
 ```
 
 ###### With `docker`
@@ -40,7 +40,7 @@ docker run -d \
   --volume /var/lib/feedbin:/data \
   --device /dev/fuse \
   --stop-signal SIGRTMIN+3 \
-  ghcr.io/ntkme/feedbin
+  ghcr.io/ntkme/feedbin:edge
 ```
 
 #### Grant Admin Access
