@@ -8,7 +8,7 @@ After=container-mc.service container-redis.service
 Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
 ExecStartPre=/bin/rm -f %t/container-feedbin-image.pid %t/container-feedbin-image.ctr-id
-ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-feedbin-image.pid --cidfile %t/container-feedbin-image.ctr-id --cgroups=no-conmon --replace -d --name feedbin-image --net host --env-file /data/feedbin/.env --workdir /opt/feedbin/image feedbin
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-feedbin-image.pid --cidfile %t/container-feedbin-image.ctr-id --cgroups=no-conmon --replace -d --name feedbin-image --net host --env-file /data/feedbin/.env --workdir /opt/feedbin/image localhost/feedbin:edge
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-feedbin-image.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-feedbin-image.ctr-id
 PIDFile=%t/container-feedbin-image.pid
