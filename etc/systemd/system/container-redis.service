@@ -1,19 +1,20 @@
 [Unit]
 Description=Podman container-redis.service
 Documentation=man:podman-generate-systemd(1)
-Wants=network.target
+Wants=network-online.target
 After=network-online.target
+RequiresMountsFor=%t/containers
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
-ExecStartPre=/bin/rm -f %t/container-redis.pid %t/container-redis.ctr-id
-ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-redis.pid --cidfile %t/container-redis.ctr-id --cgroups=no-conmon --replace -d --name redis --net host --volume /data/redis/data:/data:rw --env-file /data/redis/.env docker.io/library/redis:5-alpine redis-server --appendonly yes
-ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-redis.ctr-id -t 10
-ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-redis.ctr-id
-PIDFile=%t/container-redis.pid
-KillMode=none
-Type=forking
+TimeoutStopSec=70
+ExecStartPre=/bin/rm -f %t/%n.ctr-id
+ExecStart=/usr/bin/podman run --cidfile=%t/%n.ctr-id --sdnotify=conmon --cgroups=no-conmon --rm --replace -d --name redis --net host --volume /data/redis/data:/data:rw --env-file /data/redis/.env docker.io/library/redis:5-alpine redis-server --appendonly yes
+ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
+ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
+Type=notify
+NotifyAccess=all
 
 [Install]
 WantedBy=multi-user.target

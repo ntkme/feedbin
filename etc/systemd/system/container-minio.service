@@ -1,19 +1,20 @@
 [Unit]
 Description=Podman container-minio.service
 Documentation=man:podman-generate-systemd(1)
-Wants=container-caddy.service
-After=container-caddy.service
+Wants=network-online.target container-caddy.service
+After=network-online.target container-caddy.service
+RequiresMountsFor=%t/containers
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
-ExecStartPre=/bin/rm -f %t/container-minio.pid %t/container-minio.ctr-id
-ExecStart=/usr/bin/podman run --conmon-pidfile %t/container-minio.pid --cidfile %t/container-minio.ctr-id --cgroups=no-conmon --replace -d --name minio --net host --volume /data/minio/data:/data:rw --env-file /data/minio/.env docker.io/minio/minio server /data
-ExecStop=/usr/bin/podman stop --ignore --cidfile %t/container-minio.ctr-id -t 10
-ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/container-minio.ctr-id
-PIDFile=%t/container-minio.pid
-KillMode=none
-Type=forking
+TimeoutStopSec=70
+ExecStartPre=/bin/rm -f %t/%n.ctr-id
+ExecStart=/usr/bin/podman run --cidfile=%t/%n.ctr-id --sdnotify=conmon --cgroups=no-conmon --rm --replace -d --name minio --net host --volume /data/minio/data:/data:rw --env-file /data/minio/.env docker.io/minio/minio server /data
+ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
+ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
+Type=notify
+NotifyAccess=all
 
 [Install]
 WantedBy=multi-user.target
