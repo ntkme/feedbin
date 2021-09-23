@@ -58,7 +58,7 @@ jobs:
           tags: ${{ steps.docker-metadata.outputs.tags }}
 
       - name: Push
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' && github.actor != 'dependabot[bot]' }}
         run: echo "$tags" | xargs -n 1 sudo podman push --authfile ~/.docker/config.json --
         env:
           tags: ${{ steps.docker-metadata.outputs.tags }}
