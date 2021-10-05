@@ -57,12 +57,12 @@ jobs:
           labels: ${{ steps.docker-metadata.outputs.labels }}
 
       - name: Build
-        run: sudo podman build --cap-add CAP_SYS_ADMIN --volume /var/run/docker.sock:/var/run/docker.sock $(echo "$tags" | xargs -n 1 echo --tag) -- .
+        run: sudo podman build --cap-add CAP_SYS_ADMIN --volume /var/run/docker.sock:/var/run/docker.sock $(echo "$tags" | xargs -n 1 -r -- echo --tag) -- .
         env:
           tags: ${{ steps.docker-metadata.outputs.tags }}
 
       - name: Push
         if: ${{ github.event_name != 'pull_request' && github.actor != 'dependabot[bot]' }}
-        run: echo "$tags" | xargs -n 1 sudo podman push --authfile ~/.docker/config.json --
+        run: echo "$tags" | xargs -n 1 -r -- sudo podman push --authfile ~/.docker/config.json --
         env:
           tags: ${{ steps.docker-metadata.outputs.tags }}
