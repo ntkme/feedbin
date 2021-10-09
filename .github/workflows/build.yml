@@ -56,13 +56,18 @@ jobs:
           tags: localhost/feedbin:edge
           labels: ${{ steps.docker-metadata.outputs.labels }}
 
+      - name: Force Rootful Podman with Native OverlayFS
+        run: |-
+          printf '%s\n' '#!/bin/sh' 'exec /usr/bin/sudo -n -- /usr/bin/podman "$@"' | sudo tee /usr/local/bin/podman
+          sudo chmod a+x /usr/local/bin/podman
+
       - name: Build
-        run: sudo podman build --cap-add CAP_SYS_ADMIN --volume /var/run/docker.sock:/var/run/docker.sock $(echo "$tags" | xargs -n 1 -r -- echo --tag) -- .
+        run: podman build --cap-add CAP_SYS_ADMIN --volume /var/run/docker.sock:/var/run/docker.sock $(echo "$tags" | xargs -n 1 -r -- echo --tag) -- .
         env:
           tags: ${{ steps.docker-metadata.outputs.tags }}
 
       - name: Push
         if: ${{ github.event_name != 'pull_request' && github.actor != 'dependabot[bot]' }}
-        run: echo "$tags" | xargs -n 1 -r -- sudo podman push --authfile ~/.docker/config.json --
+        run: echo "$tags" | xargs -n 1 -r -- podman push --authfile ~/.docker/config.json --
         env:
           tags: ${{ steps.docker-metadata.outputs.tags }}
