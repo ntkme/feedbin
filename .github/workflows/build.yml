@@ -41,14 +41,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push
+      - name: Build
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -56,18 +49,27 @@ jobs:
           tags: localhost/feedbin:edge
           labels: ${{ steps.docker-metadata.outputs.labels }}
 
-      - name: Force Rootful Podman with Native OverlayFS
+      - name: Force Rootful Native OverlayFS
         run: |-
+          printf '%s\n' '#!/bin/sh' 'exec /usr/bin/sudo -n -- /usr/bin/buildah "$@"' | sudo tee /usr/local/bin/buildah
           printf '%s\n' '#!/bin/sh' 'exec /usr/bin/sudo -n -- /usr/bin/podman "$@"' | sudo tee /usr/local/bin/podman
-          sudo chmod a+x /usr/local/bin/podman
+          printf '%s\n' '#!/bin/sh' 'exec /usr/bin/sudo -n -- /usr/bin/skopeo "$@"' | sudo tee /usr/local/bin/skopeo
+          sudo chmod a+x /usr/local/bin/buildah /usr/local/bin/podman /usr/local/bin/skopeo
 
       - name: Build
-        run: podman build --cap-add CAP_SYS_ADMIN --volume /var/run/docker.sock:/var/run/docker.sock $(echo "$tags" | xargs -n 1 -r -- echo --tag) -- .
-        env:
+        uses: redhat-actions/buildah-build@HEAD
+        with:
           tags: ${{ steps.docker-metadata.outputs.tags }}
+          containerfiles: |-
+            Containerfile
+          extra-args: |-
+            --cap-add=sys_admin,mknod
+            --volume /var/run/docker.sock:/var/run/docker.sock
 
       - name: Push
         if: ${{ github.event_name != 'pull_request' && github.actor != 'dependabot[bot]' }}
-        run: echo "$tags" | xargs -n 1 -r -- podman push --authfile ~/.docker/config.json --
-        env:
+        uses: redhat-actions/push-to-registry@HEAD
+        with:
           tags: ${{ steps.docker-metadata.outputs.tags }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
