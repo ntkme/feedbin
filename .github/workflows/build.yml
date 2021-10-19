@@ -47,7 +47,6 @@ jobs:
           context: .
           push: false
           tags: localhost/feedbin:edge
-          labels: ${{ steps.docker-metadata.outputs.labels }}
 
       - name: Force Rootful Native OverlayFS
         run: |-
@@ -60,6 +59,7 @@ jobs:
         uses: redhat-actions/buildah-build@HEAD
         with:
           tags: ${{ steps.docker-metadata.outputs.tags }}
+          labels: ${{ steps.docker-metadata.outputs.labels }}
           containerfiles: |-
             Containerfile
           extra-args: |-
