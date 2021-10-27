@@ -56,7 +56,7 @@ jobs:
           sudo chmod a+x /usr/local/bin/buildah /usr/local/bin/podman /usr/local/bin/skopeo
 
       - name: Build
-        uses: redhat-actions/buildah-build@HEAD
+        uses: redhat-actions/buildah-build@v2
         with:
           tags: ${{ steps.docker-metadata.outputs.tags }}
           labels: ${{ steps.docker-metadata.outputs.labels }}
@@ -68,7 +68,7 @@ jobs:
 
       - name: Push
         if: ${{ github.event_name != 'pull_request' && github.actor != 'dependabot[bot]' }}
-        uses: redhat-actions/push-to-registry@HEAD
+        uses: redhat-actions/push-to-registry@v2
         with:
           tags: ${{ steps.docker-metadata.outputs.tags }}
           username: ${{ github.actor }}
