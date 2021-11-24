@@ -4,7 +4,7 @@ RUN podman pull docker.io/library/caddy:2-alpine \
  && podman pull docker.io/library/elasticsearch:2.4-alpine \
  && podman pull docker.io/library/memcached:1-alpine \
  && podman pull docker.io/library/postgres:14-alpine \
- && podman pull docker.io/library/redis:5-alpine \
+ && podman pull docker.io/library/redis:6-alpine \
  && podman pull docker.io/minio/mc:latest \
  && podman pull docker.io/minio/minio:latest \
  && podman pull docker-daemon:localhost/feedbin:edge \
