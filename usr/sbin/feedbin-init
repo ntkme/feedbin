@@ -35,7 +35,7 @@ configure /data/memcached/.env : <<EOF
 EOF
 
 configure /data/minio/.env <<EOF
-MINIO_HOST=https://minio.$1
+MINIO_HOST=http://127.0.0.1:9000
 MINIO_ACCESS_KEY=$(secure_random)
 MINIO_SECRET_KEY=$(secure_random)
 EOF
@@ -58,7 +58,7 @@ SECRET_KEY_BASE=$(secure_random)
 
 CAMO_KEY=$CAMO_KEY
 
-AWS_S3_ENDPOINT=$MINIO_HOST
+AWS_S3_ENDPOINT=https://minio.$1
 AWS_ACCESS_KEY_ID=$MINIO_ACCESS_KEY
 AWS_SECRET_ACCESS_KEY=$MINIO_SECRET_KEY
 AWS_S3_PATH_STYLE=true
