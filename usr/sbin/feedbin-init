@@ -35,7 +35,7 @@ configure /data/memcached/.env : <<EOF
 EOF
 
 configure /data/minio/.env <<EOF
-MINIO_HOST=http://127.0.0.1:9000
+MINIO_HOST=https://minio.$1
 MINIO_ACCESS_KEY=$(secure_random)
 MINIO_SECRET_KEY=$(secure_random)
 EOF
