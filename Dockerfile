@@ -9,9 +9,7 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
  && npm install -g yarn \
  && cd /opt/feedbin/feedbin \
  && bundle install \
- && cd /opt/feedbin/image \
- && bundle install \
- && cd /opt/feedbin/refresher \
+ && cd /opt/feedbin/crawler \
  && bundle install \
  && cd /opt/feedbin/extract \
  && npm ci \

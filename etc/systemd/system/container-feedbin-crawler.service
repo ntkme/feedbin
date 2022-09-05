@@ -1,0 +1,20 @@
+[Unit]
+Description=Podman container-feedbin-crawler.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network-online.target container-feedbin-rake.service container-mc.service container-redis.service
+After=network-online.target container-feedbin-rake.service container-mc.service container-redis.service
+RequiresMountsFor=%t/containers
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+TimeoutStopSec=70
+ExecStartPre=/bin/rm -f %t/%n.ctr-id
+ExecStart=/usr/bin/podman run --cidfile=%t/%n.ctr-id --sdnotify=conmon --cgroups=no-conmon --rm -d --replace --name feedbin-crawler --net host --env-file /data/feedbin/.env --workdir /opt/feedbin/crawler localhost/feedbin:edge
+ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
+ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target

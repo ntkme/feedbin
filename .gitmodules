@@ -1,12 +1,9 @@
 [submodule "vendor/github.com/feedbin/feedbin"]
 	path = vendor/github.com/feedbin/feedbin
 	url = https://github.com/feedbin/feedbin.git
-[submodule "vendor/github.com/feedbin/refresher"]
-	path = vendor/github.com/feedbin/refresher
-	url = https://github.com/feedbin/refresher.git
-[submodule "vendor/github.com/feedbin/image"]
-	path = vendor/github.com/feedbin/image
-	url = https://github.com/feedbin/image.git
+[submodule "vendor/github.com/feedbin/crawler"]
+	path = vendor/github.com/feedbin/crawler
+	url = https://github.com/feedbin/crawler.git
 [submodule "vendor/github.com/feedbin/extract"]
 	path = vendor/github.com/feedbin/extract
 	url = https://github.com/feedbin/extract.git
