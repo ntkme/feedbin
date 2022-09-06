@@ -36,7 +36,8 @@ docker run -d \
   --hostname feedbin.domain.name \
   --publish 80:80/tcp \
   --publish 443:443/tcp \
-  --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
+  --cgroupns host \
+  --volume /sys/fs/cgroup:/sys/fs/cgroup \
   --volume /var/lib/feedbin:/data \
   --device /dev/fuse \
   --stop-signal SIGRTMIN+3 \
