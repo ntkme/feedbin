@@ -7,6 +7,6 @@
 [submodule "vendor/github.com/feedbin/extract"]
 	path = vendor/github.com/feedbin/extract
 	url = https://github.com/feedbin/extract.git
-[submodule "vendor/github.com/atmos/camo"]
-	path = vendor/github.com/atmos/camo
-	url = https://github.com/atmos/camo.git
+[submodule "vendor/github.com/feedbin/privacy-please"]
+	path = vendor/github.com/feedbin/privacy-please
+	url = https://github.com/feedbin/privacy-please.git

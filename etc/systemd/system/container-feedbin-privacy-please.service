@@ -1,5 +1,5 @@
 [Unit]
-Description=Podman container-camo.service
+Description=Podman container-feedbin-privacy-please.service
 Documentation=man:podman-generate-systemd(1)
 Wants=network-online.target container-caddy.service
 After=network-online.target container-caddy.service
@@ -10,7 +10,7 @@ Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
 TimeoutStopSec=70
 ExecStartPre=/bin/rm -f %t/%n.ctr-id
-ExecStart=/usr/bin/podman run --cidfile=%t/%n.ctr-id --sdnotify=conmon --cgroups=no-conmon --rm -d --replace --name camo --net host --env-file /data/camo/.env --workdir /opt/atmos/camo localhost/feedbin:edge node server.js
+ExecStart=/usr/bin/podman run --cidfile=%t/%n.ctr-id --sdnotify=conmon --cgroups=no-conmon --rm -d --replace --name feedbin-privacy-please --net host --env-file /data/privacy-please/.env --env PORT=3002 --workdir /opt/feedbin/privacy-please localhost/feedbin:edge
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
 Type=notify

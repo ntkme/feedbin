@@ -15,18 +15,14 @@ secure_random () {
 }
 
 mkdir -p /data/caddy/data \
-         /data/camo \
          /data/elasticsearch/data \
          /data/feedbin \
          /data/memcached \
          /data/minio/data \
          /data/postgresql/data \
+         /data/privacy-please \
          /data/redis/data \
          /var/run/postgresql
-
-configure /data/camo/.env <<EOF
-CAMO_KEY=$(secure_random)
-EOF
 
 configure /data/elasticsearch/.env : <<EOF
 EOF
@@ -45,6 +41,12 @@ POSTGRES_USER=root
 POSTGRES_PASSWORD=$(secure_random)
 EOF
 
+configure /data/privacy-please/.env <<EOF
+PRIVACY_KEY=$(secure_random)
+
+RACK_ENV=production
+EOF
+
 configure /data/redis/.env : <<EOF
 EOF
 
@@ -56,7 +58,7 @@ REDIS_URL=redis://127.0.0.1:6379
 
 SECRET_KEY_BASE=$(secure_random)
 
-CAMO_KEY=$CAMO_KEY
+CAMO_KEY=$PRIVACY_KEY
 
 AWS_S3_ENDPOINT=https://minio.$1
 AWS_ACCESS_KEY_ID=$MINIO_ACCESS_KEY
@@ -71,7 +73,7 @@ RAILS_ENV=production
 
 FEEDBIN_HOST=$1,api.feedbin.com
 EXTRACT_HOST=$1
-CAMO_HOST=https://camo.$1
+CAMO_HOST=https://privacy-please.$1
 ENTRY_IMAGE_HOST=minio.$1
 FAVICON_HOST=minio.$1
 
@@ -105,13 +107,13 @@ api.$1 {
   }
 }
 
-camo.$1 {
-  encode zstd gzip
-  reverse_proxy http://127.0.0.1:8081
-}
-
 minio.$1 {
   encode zstd gzip
   reverse_proxy $MINIO_HOST
+}
+
+privacy-please.$1 {
+  encode zstd gzip
+  reverse_proxy http://127.0.0.1:3002
 }
 EOF

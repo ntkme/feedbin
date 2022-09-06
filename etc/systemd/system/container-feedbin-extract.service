@@ -10,7 +10,7 @@ Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
 TimeoutStopSec=70
 ExecStartPre=/bin/rm -f %t/%n.ctr-id
-ExecStart=/usr/bin/podman run --cidfile=%t/%n.ctr-id --sdnotify=conmon --cgroups=no-conmon --rm -d --replace --name feedbin-extract --net host --env-file /data/feedbin/.env --env PORT=3001 --workdir /opt/feedbin/extract localhost/feedbin:edge sh -c 'if test -n "$EXTRACT_USER" -a -n "$EXTRACT_SECRET"; then echo "$EXTRACT_SECRET" >"users/$EXTRACT_USER"; fi && exec "$@"' -- node app/server.js
+ExecStart=/usr/bin/podman run --cidfile=%t/%n.ctr-id --sdnotify=conmon --cgroups=no-conmon --rm -d --replace --name feedbin-extract --net host --env-file /data/feedbin/.env --env PORT=3001 --workdir /opt/feedbin/extract localhost/feedbin:edge /bin/sh -c 'if test -n "$EXTRACT_USER" -a -n "$EXTRACT_SECRET"; then echo "$EXTRACT_SECRET" >"users/$EXTRACT_USER"; fi && exec "$@"' -- node app/server.js
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
 Type=notify

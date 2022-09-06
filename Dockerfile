@@ -11,6 +11,8 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
  && bundle install \
  && cd /opt/feedbin/crawler \
  && bundle install \
+ && cd /opt/feedbin/privacy-please \
+ && bundle install \
  && cd /opt/feedbin/extract \
  && npm ci \
  && mkdir users
