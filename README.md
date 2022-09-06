@@ -8,8 +8,8 @@ Whole Feedbin stack in a container.
 
 - `feedbin.domain.name`
 - `api.feedbin.domain.name`
-- `camo.feedbin.domain.name`
 - `minio.feedbin.domain.name`
+- `privacy-please.feedbin.domain.name`
 
 #### Start Feedbin in a Container
 
