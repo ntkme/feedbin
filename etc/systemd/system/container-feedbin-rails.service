@@ -1,8 +1,8 @@
 [Unit]
 Description=Podman container-feedbin-rails.service
 Documentation=man:podman-generate-systemd(1)
-Wants=network-online.target container-caddy.service container-feedbin-crawler.service container-feedbin-extract.service container-feedbin-privacy-please.service container-feedbin.service container-memcached.service
-After=network-online.target container-caddy.service container-feedbin-crawler.service container-feedbin-extract.service container-feedbin-privacy-please.service container-feedbin.service container-memcached.service
+Wants=network-online.target container-caddy.service container-feedbin-extract.service container-feedbin-privacy-please.service container-feedbin.service container-memcached.service
+After=network-online.target container-caddy.service container-feedbin-extract.service container-feedbin-privacy-please.service container-feedbin.service container-memcached.service
 RequiresMountsFor=%t/containers
 
 [Service]
