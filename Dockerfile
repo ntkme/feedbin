@@ -9,8 +9,6 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
  && npm install -g yarn \
  && cd /opt/feedbin/feedbin \
  && bundle install \
- && cd /opt/feedbin/crawler \
- && bundle install \
  && cd /opt/feedbin/privacy-please \
  && bundle install \
  && cd /opt/feedbin/extract \
