@@ -13,7 +13,11 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
  && bundle install \
  && cd /opt/feedbin/extract \
  && npm ci \
- && mkdir users
+ && mkdir users \
+ && PIGO_TAG_NAME=$(basename "$(curl -fsSLo /dev/null  --write-out "%{url_effective}\n" https://github.com/esimov/pigo/releases/latest)") \
+ && PIGO_DIR=pigo-${PIGO_TAG/#v}-linux-amd64 \
+ && curl -fsSL https://github.com/esimov/pigo/releases/download/$PIGO_TAG_NAME/$PIGO_DIR.tar.gz | tar -vxzC /opt \
+ && ln -s /opt/$PIGO_DIR/pigo /usr/local/bin/pigo
 
 WORKDIR /opt/feedbin/feedbin
 
