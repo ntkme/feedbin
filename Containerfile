@@ -3,7 +3,7 @@ FROM ghcr.io/ntkme/systemd-podman:edge
 RUN podman pull docker.io/library/caddy:2-alpine \
  && podman pull docker.io/library/elasticsearch:2.4-alpine \
  && podman pull docker.io/library/memcached:1-alpine \
- && podman pull docker.io/library/postgres:14-alpine \
+ && podman pull docker.io/library/postgres:15-alpine \
  && podman pull docker.io/library/redis:6-alpine \
  && podman pull docker.io/minio/mc:latest \
  && podman pull docker.io/minio/minio:latest \
