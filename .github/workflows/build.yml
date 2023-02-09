@@ -72,4 +72,4 @@ jobs:
         with:
           tags: ${{ steps.docker-metadata.outputs.tags }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ github.token }}
