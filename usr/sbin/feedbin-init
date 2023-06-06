@@ -17,7 +17,6 @@ secure_random () {
 mkdir -p /data/caddy/data \
          /data/elasticsearch/data \
          /data/feedbin \
-         /data/memcached \
          /data/minio/data \
          /data/postgresql/data \
          /data/privacy-please \
@@ -25,9 +24,6 @@ mkdir -p /data/caddy/data \
          /var/run/postgresql
 
 configure /data/elasticsearch/.env : <<EOF
-EOF
-
-configure /data/memcached/.env : <<EOF
 EOF
 
 configure /data/minio/.env <<EOF
@@ -53,7 +49,6 @@ EOF
 configure /data/feedbin/.env <<EOF
 DATABASE_URL=postgres:///feedbin_production
 ELASTICSEARCH_URL=http://127.0.0.1:9200
-MEMCACHED_HOSTS=127.0.0.1:11211
 REDIS_URL=redis://127.0.0.1:6379
 
 SECRET_KEY_BASE=$(secure_random)
