@@ -23,6 +23,8 @@ mkdir -p /data/caddy/data \
          /data/redis/data \
          /var/run/postgresql
 
+chown 1000:1000 /data/elasticsearch/data
+
 configure /data/elasticsearch/.env : <<EOF
 discovery.type=single-node
 xpack.security.enabled=false
