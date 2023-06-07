@@ -1,0 +1,11 @@
+[Unit]
+Description=Podman container-mc@%I.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network-online.target container-minio.service
+After=network-online.target container-minio.service
+RequiresMountsFor=%t/containers
+
+[Service]
+ExecStart=/usr/bin/podman run --rm --name mc --net host --env-file /data/minio/.env --entrypoint /bin/sh docker.io/minio/mc -c 'until mc alias set minio "$MINIO_HOST" "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"; do sleep 1; done && mc ls --quiet --summarize "minio/%I" || mc mb "minio/%I" && mc anonymous set download "minio/%I"'
+Type=oneshot
+RemainAfterExit=yes

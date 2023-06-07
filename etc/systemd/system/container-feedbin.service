@@ -1,8 +1,8 @@
 [Unit]
 Description=Podman container-feedbin.service
 Documentation=man:podman-generate-systemd(1)
-Wants=network-online.target container-caddy.service container-feedbin-extract.service container-feedbin-privacy-please.service container-feedbin-rake.service container-mc.service container-redis.service
-After=network-online.target container-caddy.service container-feedbin-extract.service container-feedbin-privacy-please.service container-feedbin-rake.service container-mc.service container-redis.service
+Wants=network-online.target container-caddy.service container-feedbin-extract.service container-feedbin-privacy-please.service container-feedbin-rake.service container-mc@feedbin.service container-redis.service
+After=network-online.target container-caddy.service container-feedbin-extract.service container-feedbin-privacy-please.service container-feedbin-rake.service container-mc@feedbin.service container-redis.service
 RequiresMountsFor=%t/containers
 
 [Service]
