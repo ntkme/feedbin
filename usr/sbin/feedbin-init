@@ -24,6 +24,8 @@ mkdir -p /data/caddy/data \
          /var/run/postgresql
 
 configure /data/elasticsearch/.env : <<EOF
+discovery.type=single-node
+xpack.security.enabled=false
 EOF
 
 configure /data/minio/.env <<EOF
