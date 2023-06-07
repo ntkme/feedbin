@@ -6,6 +6,6 @@ After=network-online.target container-minio.service
 RequiresMountsFor=%t/containers
 
 [Service]
-ExecStart=/usr/bin/podman run --rm --name mc --net host --env-file /data/feedbin/.env --env-file /data/minio/.env --entrypoint /bin/sh docker.io/minio/mc -c 'until mc alias set minio "$MINIO_HOST" "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"; do sleep 1; done && if test -n "$AWS_S3_BUCKET"; then mc ls --quiet --summarize "minio/$AWS_S3_BUCKET" || mc mb "minio/$AWS_S3_BUCKET" && mc policy set download "minio/$AWS_S3_BUCKET"; fi && if test -n "$AWS_S3_BUCKET_FAVICONS"; then mc ls --quiet --summarize "minio/$AWS_S3_BUCKET_FAVICONS" || mc mb "minio/$AWS_S3_BUCKET_FAVICONS" && mc policy set download "minio/$AWS_S3_BUCKET_FAVICONS"; fi'
+ExecStart=/usr/bin/podman run --rm --name mc --net host --env-file /data/feedbin/.env --env-file /data/minio/.env --entrypoint /bin/sh docker.io/minio/mc -c 'until mc alias set minio "$MINIO_HOST" "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"; do sleep 1; done && if test -n "$AWS_S3_BUCKET"; then mc ls --quiet --summarize "minio/$AWS_S3_BUCKET" || mc mb "minio/$AWS_S3_BUCKET" && mc anonymous set download "minio/$AWS_S3_BUCKET"; fi && if test -n "$AWS_S3_BUCKET_FAVICONS"; then mc ls --quiet --summarize "minio/$AWS_S3_BUCKET_FAVICONS" || mc mb "minio/$AWS_S3_BUCKET_FAVICONS" && mc anonymous set download "minio/$AWS_S3_BUCKET_FAVICONS"; fi'
 Type=oneshot
 RemainAfterExit=yes
