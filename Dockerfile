@@ -2,7 +2,8 @@ FROM docker.io/library/ruby:3.2.2
 
 COPY vendor/github.com /opt
 
-RUN apt-get install -y --no-install-recommends libidn11-dev libvips42 nodejs npm postgresql-client \
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends libidn11-dev libvips42 nodejs npm postgresql-client \
  && rm -rf /var/lib/apt/lists/* \
  && gem update --system \
  && npm install -g yarn \
