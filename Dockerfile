@@ -2,8 +2,7 @@ FROM docker.io/library/ruby:3.2.2
 
 COPY vendor/github.com /opt
 
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - \
- && apt-get install -y --no-install-recommends libidn11-dev libvips42 nodejs postgresql-client \
+RUN apt-get install -y --no-install-recommends libidn11-dev libvips42 nodejs npm postgresql-client \
  && rm -rf /var/lib/apt/lists/* \
  && gem update --system \
  && npm install -g yarn \
