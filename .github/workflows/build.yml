@@ -63,7 +63,7 @@ jobs:
           containerfiles: |-
             Containerfile
           extra-args: |-
-            --cap-add=sys_admin,mknod
+            --security-opt=seccomp=unconfined
             --volume /var/run/docker.sock:/var/run/docker.sock
 
       - name: Push
