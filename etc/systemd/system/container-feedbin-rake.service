@@ -6,6 +6,6 @@ After=network-online.target container-elasticsearch.service container-postgres.s
 RequiresMountsFor=%t/containers
 
 [Service]
-ExecStart=/usr/bin/podman run --rm --name feedbin-rake --net host --volume /var/run/postgresql:/var/run/postgresql:rw --env-file /data/feedbin/.env localhost/feedbin:edge /bin/sh -c 'until pg_isready; do sleep 1; done && until curl -fsSo /dev/null --head "${ELASTICSEARCH_URL:-http://127.0.0.1:9200}"; do sleep 1; done && bundle exec rake db:migrate || bundle exec rake db:setup'
+ExecStart=/usr/bin/podman run --rm --name feedbin-rake --net host --volume /var/run/postgresql:/var/run/postgresql:rw --env-file /data/feedbin/.env localhost:5000/feedbin:edge /bin/sh -c 'until pg_isready; do sleep 1; done && until curl -fsSo /dev/null --head "${ELASTICSEARCH_URL:-http://127.0.0.1:9200}"; do sleep 1; done && bundle exec rake db:migrate || bundle exec rake db:setup'
 Type=oneshot
 RemainAfterExit=yes
