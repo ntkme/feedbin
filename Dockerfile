@@ -10,6 +10,7 @@ RUN apt-get update \
  && cd /opt/feedbin/feedbin \
  && bundle install \
  && cd /opt/feedbin/privacy-please \
+ && rm Gemfile.lock \
  && bundle install \
  && cd /opt/feedbin/extract \
  && npm ci \
