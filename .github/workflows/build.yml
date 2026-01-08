@@ -54,7 +54,7 @@ jobs:
           push: true
           tags: localhost:5000/feedbin:edge
 
-      - name: Force Rootful Native OverlayFS
+      - name: Force Rootful Podman
         run: |
           printf '%s\n' '#!/bin/sh' 'exec /usr/bin/sudo -n -- /usr/bin/buildah "$@"' | sudo tee /usr/local/bin/buildah
           printf '%s\n' '#!/bin/sh' 'exec /usr/bin/sudo -n -- /usr/bin/podman "$@"' | sudo tee /usr/local/bin/podman
