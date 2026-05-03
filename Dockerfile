@@ -1,4 +1,4 @@
-FROM docker.io/library/ruby:3.4.9
+FROM docker.io/library/ruby:4.0.3
 
 COPY vendor/github.com /opt
 
