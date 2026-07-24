@@ -62,7 +62,7 @@ jobs:
           sudo chmod a+x /usr/local/bin/buildah /usr/local/bin/podman /usr/local/bin/skopeo
 
       - name: Build
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@v3
         with:
           tags: ${{ steps.docker-metadata.outputs.tags }}
           labels: ${{ steps.docker-metadata.outputs.labels }}
