@@ -74,7 +74,7 @@ jobs:
 
       - name: Push
         if: ${{ github.event_name != 'pull_request' && github.actor != 'dependabot[bot]' }}
-        uses: redhat-actions/push-to-registry@v2
+        uses: redhat-actions/push-to-registry@v3
         with:
           tags: ${{ steps.docker-metadata.outputs.tags }}
           username: ${{ github.actor }}
